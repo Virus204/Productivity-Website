@@ -1,2 +1,11 @@
 @import "tailwindcss";
 
+/* @theme{
+  --background-image-hero-pattern: url("/hero-bg.png");
+}
+
+@layer base{
+  body {
+    @apply bg-[#34117E];
+  }
+} */
