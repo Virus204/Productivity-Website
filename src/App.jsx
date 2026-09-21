@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { DayPicker } from "react-day-picker";
 import "react-day-picker/dist/style.css";
 import { FadeArc } from "@/components/ui/fade-arc";
+
 function getWeatherCondition(code) {
   if (code === 0) return "Clear Sky";
   if (code <= 3) return "Partly Cloudy";
@@ -9,6 +10,7 @@ function getWeatherCondition(code) {
   if (code <= 77) return "Snow";
   return "Stormy";
 }
+
 function App() {
   const [selected, setSelected] = useState(new Date);
   const [weatherData, setWeatherData] = useState(null);
@@ -19,7 +21,7 @@ function App() {
   }, [])
   return (
     <>
-      <div className="h-screen w-full bg-cover bg-center bg-no-repeat bg-[url(/hero-bg2.png)]">
+      <div className="h-screen w-full bg-cover bg-no-repeat bg-[url(/hero-bg2.png)]">
         <div className="p-9 flex">
           <div className="text-white/80 backdrop-blur-sm bg-black/10 border border-white/20 shadow-xl w-90 rounded-xl p-6">
             <div className="mb-2">
@@ -48,13 +50,50 @@ function App() {
               />
             </div>
           </div>
-          <div className="backdrop-blur-sm border border-white/20 bg-black/10 text-white/80 shadow-xl w-90 rounded-xl p-6 ml-10">
-            <div className="flex items-center justify-center w-full min-h-[200px]">
+          <div className="backdrop-blur-sm border border-white/20 bg-black/10 text-white/80 shadow-xl w-70 rounded-xl p-8 ml-10">
+            <div className="flex items-center flex-col justify-center w-full min-h-[200px]">
               {weatherData ?(
-                <div>
-                  <img src="weather-icon.svg" className="mb-10"></img>
-                  <h2 className="text-white"><span className="text-5xl">{weatherData.current.temperature_2m}</span>{weatherData.current_units.temperature_2m}</h2>
-                </div>
+                <>
+                  <div>
+                    <img src="weather-icon.svg" className="mb-10"></img>
+                    <h2 className="text-7xl font-light text-white flex justify-center items-start">
+                      {Math.round(weatherData.current.temperature_2m)}<span className="text-4xl mt-1">°</span>
+                    </h2>
+                  </div>
+                  <div className="text-white/80 text-md mb-4 mt-4">
+                    {getWeatherCondition(weatherData.current.weather_code)}
+                  </div>
+                  <div className="flex items-center gap-4 text-md text-white/90 mb-6">
+                    <span className="flex items-center gap-1">
+                      <span className="text-white/50 text-xs">↑</span> 
+                      {Math.round(weatherData.daily.temperature_2m_max[0])}°
+                    </span>
+                    <span className="text-gray-600">|</span>
+                    <span className="flex items-center gap-1">
+                      <span className="text-white/50 text-xs">↓</span> 
+                      {Math.round(weatherData.daily.temperature_2m_min[0])}°
+                    </span>
+                  </div>
+                  <div className="w-50 pt-4 flex justify-between px-2">
+                    {/* We map through index 1, 2, and 3 (Tomorrow, Day 2, Day 3) */}
+                    {[1, 2, 3].map((dayIndex) => {
+                      // Convert the API date string to a short weekday (e.g., "Wed")
+                      const date = new Date(weatherData.daily.time[dayIndex]);
+                      const dayName = date.toLocaleDateString('en-US', { weekday: 'short' });
+
+                      return (
+                        <div key={dayIndex} className="flex flex-col items-center gap-2">
+                          <span className="text-xs text-white/70">{dayName}</span>
+                          {/* You can reuse your icon here or map different icons based on weatherData.daily.weather_code[dayIndex] */}
+                          <img src="weather-icon.svg" className="w-6 h-6" alt="forecast" />
+                          <span className="text-sm font-medium">
+                            {Math.round(weatherData.daily.temperature_2m_max[dayIndex])}°
+                          </span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </>
               ):(
                 <FadeArc className="size-20 text-[#34117E]"/>
               )}
