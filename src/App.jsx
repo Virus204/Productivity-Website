@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { DayPicker } from "react-day-picker";
 import "react-day-picker/dist/style.css";
 import { FadeArc } from "@/components/ui/fade-arc";
+import Timer from "./components/Timer";
 
 function getWeatherCondition(code) {
   if (code === 0) return "Clear Sky";
@@ -22,7 +23,7 @@ function App() {
   return (
     <>
       <div className="h-screen w-full bg-cover bg-no-repeat bg-[url(/hero-bg2.png)]">
-        <div className="p-9 flex">
+        <div className="p-20 flex">
           <div className="text-white/80 backdrop-blur-sm bg-black/10 border border-white/20 shadow-xl w-90 rounded-xl p-6">
             <div className="mb-2">
               <span className="text-lg font-medium text-white/90">Calender</span>
@@ -102,6 +103,14 @@ function App() {
           <div className="backdrop-blur-sm border border-white/20 bg-black/10 text-white/80 shadow-xl w-200 rounded-xl p-6 ml-10">
             <div>
               <span className="text-lg font-medium text-white/90">My Tasks</span>
+            </div>
+          </div>
+          <div className="backdrop-blur-sm border border-white/20 bg-black/10 text-white/80 shadow-xl w-200 rounded-xl p-6 ml-10">
+            <div>
+              <span className="text-lg font-medium text-white/90">Focus Timer</span>
+            </div>
+            <div>
+              <Timer />
             </div>
           </div>
         </div>
