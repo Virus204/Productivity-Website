@@ -107,9 +107,6 @@ function App() {
           </div>
           <div className="backdrop-blur-sm border border-white/20 bg-black/10 text-white/80 shadow-xl w-200 rounded-xl p-6 ml-10">
             <div>
-              <span className="text-lg font-medium text-white/90">Focus Timer</span>
-            </div>
-            <div>
               <Timer />
             </div>
           </div>
