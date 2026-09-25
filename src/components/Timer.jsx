@@ -1,50 +1,37 @@
 import React from 'react';
-import { useCountdownTimer } from 'use-countdown-timer';
+// import { useCountdownTimer } from 'use-countdown-timer';
+import { useEffect, useState } from "react";
 
+const TIME_IN_MILISECONDS_TO_COUNTDOWN = 30*1000;
+const INTERVAL_IN_MILISECONDS = 1000;
 function Timer() {
-  const INITIAL_TIME = 1000 * 60 * 2; 
+  const [time, setTime] = useState(TIME_IN_MILISECONDS_TO_COUNTDOWN);
+  const [start, setStart] = useState(false);
 
-  const {
-    countdown,
-    start,
-    pause,
-    reset,
-    isRunning,
-  } = useCountdownTimer({
-    timer: INITIAL_TIME,
-    autostart: false,
-    onExpire: () => {
-      console.log('Timer finished!');
-    },
-  });
-
-  // Helper function to format milliseconds to MM:SS
-  const formatTime = () => {
-    const totalSeconds = Math.max(0, Math.ceil(countdown / 1000));
-    const minutes = Math.floor(totalSeconds / 60);
-    const seconds = totalSeconds % 60;
-
-    const formattedMinutes = String(minutes).padStart(2, '0');
-    const formattedSeconds = String(seconds).padStart(2, '0');
-
-    return `${formattedMinutes}:${formattedSeconds}`;
-  };
-
-  return (
-    <div>
-        <div>
-            <span className="text-lg font-medium text-white/90">Focus Timer</span>
-        </div>
-        <div>{formatTime()}</div>
-        <p style={{ color: isRunning ? 'green' : 'gray' }}>
-            Status: {isRunning ? 'Running' : 'Paused / Stopped'}
-        </p>
-        <div>
-            <button onClick={start} disabled={isRunning}>Start</button>
-            <button onClick={pause} disabled={!isRunning}>Pause</button>
-            <button onClick={reset}>Reset</button>
-        </div>
-    </div>
-  );
+    useEffect(() => {
+        if(start){
+            let interval;
+            const countDownUntilZero = () => {
+                setTime(prevTime => {
+                    if (prevTime === 0) {
+                        clearInterval(interval);
+                        return  prevTime;
+                    }
+                    else {
+                        return prevTime - INTERVAL_IN_MILISECONDS;
+                    }
+                })
+            }
+            interval = setInterval(countDownUntilZero, INTERVAL_IN_MILISECONDS);
+            return () => clearInterval(interval);
+            }
+    }, [start]);
+    
+    return <>
+        {time>0 ? (time/1000): (<><h2>{(time/1000)}</h2><h2>Finished Timer</h2></>)} <br />
+        <button className='cursor-pointer' onClick={()=>setStart(true)}>Start</button>
+        <button className='cursor-pointer' onClick={()=>setStart(false)}>Pause</button>
+        <button className='cursor-pointer' onClick={()=>{setStart(false);setTime(TIME_IN_MILISECONDS_TO_COUNTDOWN)}}>Reset</button>
+    </>;
 }
 export default Timer;
