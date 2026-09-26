@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { DayPicker } from "react-day-picker";
 import "react-day-picker/dist/style.css";
 import { FadeArc } from "@/components/ui/fade-arc";
+import GradientBackground from './components/GradientBackground'
 import Timer from "./components/Timer";
 
 function getWeatherCondition(code) {
@@ -15,6 +16,7 @@ function getWeatherCondition(code) {
 function App() {
   const [selected, setSelected] = useState(new Date);
   const [weatherData, setWeatherData] = useState(null);
+  
   useEffect(() => {
     const url = "https://api.open-meteo.com/v1/forecast?latitude=30.0626&longitude=31.2497&current=temperature_2m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=Africa/Cairo";
     fetch(url).then(response => response.json()).then(data => {setWeatherData(data);})
@@ -22,7 +24,8 @@ function App() {
   }, [])
   return (
     <>
-      <div className="h-screen w-full bg-cover bg-no-repeat bg-[url(/hero-bg2.png)]">
+      <div className="relative h-screen w-full overflow-hidden">
+        <GradientBackground />
         <div className="p-20 flex">
           <div className="text-white/80 backdrop-blur-sm bg-black/10 border border-white/20 shadow-xl w-90 rounded-xl p-6">
             <div className="mb-2">
